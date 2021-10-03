@@ -17,12 +17,7 @@
         :options="cmOptions"
       />
 
-      <codemirror
-        class="flex-1"
-       
-        v-model="codeOutput"
-        :options="cmOptions"
-      />
+      <codemirror class="flex-1" v-model="codeOutput" :options="cmOptions" />
     </div>
   </div>
 </template>
@@ -79,19 +74,33 @@ export default {
     },
     invalidateJSON() {
       try {
-        if (this.jsonPathValue.startsWith('_')) {
+        if (this.jsonPathValue.startsWith("_")) {
           setTimeout(() => {
-            const data = eval(
-              `"use strict"; (function() { const _ = (${ JSON.stringify(this.dataOutput || []) }); return (${this.jsonPathValue}); })();`
-            );
-            this.codeOutput = JSON.stringify(data, null, 2);
+            try {
+              const initializer = (interpreter, globalObject) => {
+                interpreter.setProperty(
+                  globalObject,
+                  "_",
+                  interpreter.nativeToPseudo(this.dataOutput)
+                );
+              };
+
+              const transpiled = Babel.transform(this.jsonPathValue, {
+                presets: ["env"],
+              }).code;
+              const interpreter = new Interpreter(transpiled, initializer);
+              interpreter.run();
+              const native = interpreter.pseudoToNative(interpreter.value);
+              this.codeOutput = JSON.stringify(native, null, 2);
+            } catch (ignored) {              
+            }
           });
           return;
         }
-        
+
         const data = jp.query(this.dataOutput, this.jsonPathValue);
         this.codeOutput = JSON.stringify(data, null, 2);
-      } catch(e) {
+      } catch (e) {
         this.codeOutput = JSON.stringify(this.dataOutput, null, 2);
       }
     },
