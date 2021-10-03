@@ -62,15 +62,17 @@ export default {
       try {
         this.dataOutput = JSON5.parse(this.code);
         this.invalidateJSON();
-      } catch (e) {}
+      } catch (e) {
+        this.dataOutput = [];
+      }
     },
     prettify() {
-      const value = JSON.parse(this.code);
-      this.code = JSON.stringify(value, null, 2);
+      const value = JSON5.parse(this.code);
+      this.code = JSON5.stringify(value, null, 2);
     },
     minify() {
-      const value = JSON.parse(this.code);
-      this.code = JSON.stringify(value);
+      const value = JSON5.parse(this.code);
+      this.code = JSON5.stringify(value);
     },
     jsonPathChange() {
       this.invalidateJSON();
