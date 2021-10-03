@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex gap-2 m-4">
+    <div class="flex gap-2 m-4 flex-wrap">
       <x-button @click="prettify()">Prettify</x-button>
       <x-button @click="minify()">Minify</x-button>
       <x-text-field

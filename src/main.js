@@ -13,4 +13,3 @@ new Vue({
 
 
 Vue.use(VueCodemirror, { })
-
