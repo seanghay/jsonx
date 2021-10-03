@@ -7,4 +7,4 @@ A tool for manipulating JSON.
 - [x] JSON5
 - [x] JsonPath
 - [x] JavaScript Interpreter
-- [ ] On-demand import modules from npm
+- [ ] Import modules from npm on-demand
