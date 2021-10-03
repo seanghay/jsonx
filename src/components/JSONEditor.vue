@@ -61,7 +61,7 @@ export default {
     onCodeChange() {
       try {
         this.dataOutput = JSON5.parse(this.code);
-        this.invalidateJSON();
+        // this.invalidateJSON();
       } catch (e) {}
     },
     prettify() {
@@ -79,11 +79,14 @@ export default {
       try {
 
         if (this.jsonPathValue.startsWith('_')) {
-          const data = eval(
-            `"use strict"; (function() { const _ = (${ JSON.stringify(this.dataOutput) }); return (${this.jsonPathValue}); })();`
-          );
-          
-          this.codeOutput = JSON.stringify(data, null, 2);
+          setTimeout(() => {
+            const data = eval(
+              `"use strict"; (function() { const _ = (${ JSON.stringify(this.dataOutput || []) }); return (${this.jsonPathValue}); })();`
+            );
+            
+            this.codeOutput = JSON.stringify(data, null, 2);
+          })
+
           return;
         }
         
